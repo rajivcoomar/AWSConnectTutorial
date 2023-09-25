@@ -23,7 +23,17 @@ Info - Flight status
 ---------------------------------------
 Contact us : Transfer to an agent
 ---------------------------------------
- 
+For RTIM_MainMenu - Add Lambda (RTM_RichMsg-Lambda) initialization and validation to this intents.
+AskNumber
+FlightSelect
+Help
+No
+Saver
+
+For YesandNo - Add Lambda (RTM_RichMsg-Lambda) initialization and validation to this intents.
+AskPNR
+CancelFlight
+ChangeFlight
  
 A complete demo from scratch to prepare a chatbot for Airline services.
 This video is part of complete the series. 
@@ -36,14 +46,14 @@ Lambda
 Features:
 Lex intent NLP
 Interactive  message: List, Carausal, Button ( Quick reply)
-Slot - City, number, email, name, mobilenumber
-Transfer to live agent, Handle Routing profile, User Manage, Security Profile.
+Slot - City, number, email, name, mobile number
+Transfer to live agent, Handle Routing profile, User management, and Security Profile.
 Calling Lambda from Lex
 Email AWS SES Integration
 Axios API Integration
 
 Github Live demo code:
-https://github.com/rajivcoomar/AWSConnectTutorial/tree/main/LiveDemoCode 
+https://github.com/rajivcoomar/AWSConnectTutorial/tree/main/LiveDemoCode
 
 Github code for AWS Interactive  message: https://github.com/rajivcoomar/AWSConnectTutorial/tree/main/CustomRichUI
 
@@ -52,7 +62,7 @@ Github code to run locally:  https://github.com/rajivcoomar/DialogflowES/blob/ma
 Part 1 Call Flow: https://youtu.be/aMHU0Af_bIk
 Part 2 Main Menu: https://youtu.be/RDAWqD9pla4
 Part 3 Slots  for Flight Booking: https://youtu.be/LTG0Vri2oyo
-Part 4 Carousel, LIST interactive message : https://youtu.be/35NVJgJBhS4
+Part 4 Carousel, LIST interactive message: https://youtu.be/35NVJgJBhS4
 Part 5 Slots  for Customer info: https://youtu.be/FR2o6iDIvlE
 Part 6 Transfer to Agent & Routing: https://youtu.be/4Ni6LHl1oyw
 Part 7 Email AWS SES Integration: https://youtu.be/CQGuDGHTrgw
@@ -60,5 +70,5 @@ Part 8 API Integration: https://youtu.be/ZYf24i2R6-o
 Part 9 Chatbot Hosting: https://youtu.be/X7VmyG8KXbM
  
 
-More Update coming soon...
-Subscribe to channel : https://www.youtube.com/@rajivcoomar
+More Updates coming soon...
+Subscribe to channel: https://www.youtube.com/@rajivcoomar
