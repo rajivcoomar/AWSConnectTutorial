@@ -29,6 +29,7 @@ FlightSelect
 Help
 No
 Saver
+Yes
 
 For YesandNo - Add Lambda (RTM_RichMsg-Lambda) initialization and validation to this intents.
 AskPNR
