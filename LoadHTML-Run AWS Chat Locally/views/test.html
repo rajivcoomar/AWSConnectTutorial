@@ -1,0 +1,13 @@
+<script type="text/javascript">
+
+// PUT YOUR SCRIPT HERE
+  
+  amazon_connect('authenticate', function(callback) {
+  window.fetch('/token').then(res => {
+    res.json().then(data => {
+	alert(data.token);
+      callback(data.token);
+    });
+  });
+});
+</script>
