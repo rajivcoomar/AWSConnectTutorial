@@ -1,9 +1,11 @@
-The import of Card json doesn't work.
+The import of Card JSON doesn't work.
 You have to delete the View and insert a new View.
 
-In that Select the Cards from drop down and select Version 1.
+In that Select the Cards from drop-down and select Version 1.
 
-Here is JSON which you can use to fill the manual value of each attributes ( as shown in the video)
+Here is JSON which you can use to fill in the manual value of each attribute ( as shown in the video)
+
+```
 {
   "Heading": "Welcome to Read the Manual",
   "CardsPerRow": "1",
@@ -55,3 +57,4 @@ Here is JSON which you can use to fill the manual value of each attributes ( as 
     }
   ]
 }
+```
