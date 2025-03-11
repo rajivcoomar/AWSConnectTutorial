@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+  <head>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/amazon-connect-streams/release/connect-streams-min.js"></script>
+  </head>
+   <style>
+        .customer-data {
+            width: 80%;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+    </style>
+  <!-- Add the call to init() as an onload so it will only run once the page is loaded -->
+  <body onload="init()">
+    <main style="display: flex;">
+      <div id="ccp-container"></div>
+     <!-- <div id="customerprofiles-container"></div>-->
+      <div id="wisdom-container"></div>
+      <div id="customviews-container"></div>
+	        <table id="attributes" class="fixed">
+          <col width="10px" />
+          <col width="15px" />
+          <thead>
+              <tr>
+                  <th>Customer Information</th>
+                  <th>Value</th>
+              </tr>
+          </thead>
+		   <tbody>
+			<tr>
+			  <td>UserName</td>
+			  <td></td>
+			</tr>
+			<tr>
+			  <td>PhoneNumber</td>
+			  <td></td>
+			</tr>
+		</tbody>
+         
+        </table>
+      </div>
+    </main>
+    <script type="text/javascript">
+      function init() {
+        const connectUrl = "https://<instance name>.awsapps.com/connect";
+        connect.agentApp.initApp(
+            "ccp", 
+            "ccp-container", 
+            connectUrl + "/ccp-v2/",
+            { style: "width:400px; height:600px;" }
+        );
+      /*  connect.agentApp.initApp(
+            "customerprofiles", 
+            "customerprofiles-container", 
+            connectUrl + "/customerprofiles-v2/",
+            { style: "width:400px; height:600px;" }
+        );*/
+        //used to initialize Amazon Q Connect
+        connect.agentApp.initApp(
+            "wisdom", 
+            "wisdom-container", 
+            connectUrl + "/wisdom-v2/",
+            { style: "width:400px; height:600px;" }
+        );
+		
+		 connect.contact((contact)=>{
+        
+			var contactAttr=contact.getAttributes();
+			// Iterate attributes and populate the table
+			try {
+				let tbody = document.getElementById("attributes").getElementsByTagName('tbody')[0];
+					
+				Object.values(contactAttr).forEach((attribute) => {
+
+				  // Select all rows in the table body
+				  const rows = tbody.querySelectorAll('tr');
+
+				  // Loop through the rows and update the second <td> in each row
+				  for (let i = 0; i < rows.length; i++) {
+				  
+					const cellName = rows[i].querySelector('td:nth-child(1)');
+					
+					if(cellName.textContent == 'PhoneNumber')
+					{
+						if(attribute.name =='PhoneNumber')
+						{
+							const cell = rows[i].querySelector('td:nth-child(2)'); // Select the second <td>
+							cell.textContent = attribute.value; // Update the content of the second <td>
+							custPhoneNumber = attribute.value;
+						}
+						
+					}
+					else if(cellName.textContent == 'UserName')
+					{
+						if(attribute.name =='UserName')
+						{
+							const cell = rows[i].querySelector('td:nth-child(2)'); // Select the second <td>
+							cell.textContent = attribute.value; // Update the content of the second <td>
+						
+						}
+						
+					}
+					else{
+						const cell = rows[i].querySelector('td:nth-child(2)'); // Select the second <td>
+						cell.textContent = attribute.value; // Update the content of the second <td>
+					}
+				  }
+			})
+			} catch (e) {
+				console.error("CDEBUG >> ContactEvents.handleContactConnecting() - Error!! ",e);
+			}
+			
+
+			
+        });
+
+        /**
+         * CustomViews applications are traditionally attached to a contact for auto handling the lifecycle of a customviews on the attached contacts destroy event. 
+         * Customviews has a few additional options that can be passed into the initApp config under the customViewsParams property to enable this behavior.
+         * NOTE: Destroyed customviews applications will be removed from the AppRegistry to clear their namespace when using customViewsParams.
+         * WARNING: Failing to handle the lifecycle of a customview by setting disableAutoDestroy to true and not calling terminateCustomView() on the application will cause the
+         * customviews to count against your chat concurrency until it is terminated by the chat reaching its configured duration (defaults to 24 hours) or the Show View block timeout.
+         * 
+         * *OPTIONAL*
+         * contact(contact | string): Attaches the contact to the customviews application, can be a contact object or contactId. 
+         * If you use a contactId then disableAutoDestroy is true by default and you must use 
+         * connect.core.terminateCustomView() to end the lifecycle of the customviews before closing the iframe. 
+         * 
+         * iframeSuffix (string): Attaches a suffix to the customviews application iframe id. This id will be formed as customviews{iframeSuffix}. 
+         * Useful for instantiating multiple customviews applications in a single page and associating customviews applications with contactIds.
+         * 
+         * contactFlowId (string): The contactFlowId for the customviews that the application will display.
+         * 
+         * disableAutoDestroy (boolean): Disables the default handling of the views lifecycle behavior to not
+         * terminate when the connected contact is closed. 
+         * WARNING: NOT PROPERLY TERMINATING THE CUSTOMVIEW WITH CONNECT.CORE.TERMINATECUSTOMVIEW() BEFORE DESTROYING YOUR IFRAME CONTEXT WILL CAUSE THE CUSTOMVIEW TO COUNT AGAINST YOUR CHAT CONCURRENCY UNTIL IT IS TERMINATED BY THE DEFAULT CHAT OR CUSTOMVIEW FLOW TIMEOUT.
+         * 
+         * terminateCustomViewOptions (TerminateCustomViewOptions): Options around controlling the iframe's resolution behavior when disableAutoDestroy is true. 
+         *  - resolveIframe (boolean): Whether to deconstruct the application iframe and clear its id in the AppRegistry, freeing the namespace of the applications id. Default true.
+         * -  timeout (number): Timeout in ms. The amount of time to wait for the DOM to resolve and clear the iframe if resolveIframe is true. Default 5000.
+         *  - hideIframe (boolean): Hides the iframe while it wait to be cleared from the DOM. Default true.
+         * 
+         **/
+       /*  connect.contact((contact)=>{
+            contact.onConnected((contact)=>{
+                connect.agentApp.initApp(
+                  "customviews",
+                  "customviews-container",
+                  connectUrl + "/stargate/app",
+                  { 
+                    style: "width:400px; height:600px;",
+                    customViewsParams: {
+                      contact: contact,
+                      contactFlowId: "a471027f-cf85-48c8-8d82-22edce32b842",
+                      iframeSuffix: `${contact.getContactId()}-a471027f-cf85-48c8-8d82-22edce32b842`,
+                      disableAutoDestroy: false,
+                     
+                    },
+                  }
+              );
+            });
+
+           contact.onACW((contact)=>{
+                connect.agentApp.initApp(
+                  "customviews",
+                  "customviews-container",
+                  connectUrl + "/stargate/app",
+                  { 
+                    style: "width:400px; height:600px;",
+                    customViewsParams: {
+                      contact: contact,
+                      contactFlowId: "70f643e7-7565-431b-9eb7-f5d666fc7a34",
+                      iframeSuffix:`${contact.getContactId()}-70f643e7-7565-431b-9eb7-f5d666fc7a34`;
+                      disableAutoDestroy: true
+                    },
+                  }
+              );
+            });
+
+            // Because the onACW initApp for customviews has disableAutoDestroy set to true, we must manually terminate the customview 
+            contact.onDestroy((contact) => {
+              connect.core.terminateCustomView(
+                connectUrl, 
+                `${contact.getContactId()}-70f643e7-7565-431b-9eb7-f5d666fc7a34`,
+                 {
+                  resolveIframe: true,
+                  timeout: 5000, 
+                  hideIframe: true
+                 }
+              );
+            })
+        })*/
+		
+		
+		
+		
+      }
+    </script>
+  </body>
+</html>
